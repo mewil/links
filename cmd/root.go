@@ -25,7 +25,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var labels []string
+var (
+	labels []string
+	repo   = os.Getenv("LINKS_REPO")
+)
 
 var rootCmd = &cobra.Command{
 	Use:   "links",
@@ -72,7 +75,7 @@ func createIssue(url, title, description string) error {
 	}
 
 	body := fmt.Sprintf("%s\n\nSource: %s\n", description, url)
-	args := []string{"gh", "issue", "create", "--repo", "mewil/links", "--title", title, "--body", body}
+	args := []string{"gh", "issue", "create", "--repo", repo, "--title", title, "--body", body}
 	for _, label := range labels {
 		args = append(args, "--label", label)
 	}
