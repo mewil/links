@@ -32,7 +32,7 @@ var (
 
 var rootCmd = &cobra.Command{
 	Use:   "links",
-	Short: "A CLI application to create GitHub issues from a url and list of tags",
+	Short: "A CLI tool for creating and organizing websites as GitHub issues",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		url := args[0]
@@ -56,7 +56,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringSliceVarP(&labels, "labels", "l", []string{}, "labels to add to the GitHub issue")
+	rootCmd.PersistentFlags().StringSliceVarP(&labels, "label", "l", []string{}, "labels to add to the GitHub issue")
 }
 
 func fetchNameAndDescription(url string) (string, string, error) {
