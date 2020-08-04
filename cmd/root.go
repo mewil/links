@@ -26,8 +26,9 @@ import (
 )
 
 var (
-	labels []string
-	repo   = os.Getenv("LINKS_REPO")
+	labels      []string
+	customTitle string
+	repo        = os.Getenv("LINKS_REPO")
 )
 
 var rootCmd = &cobra.Command{
@@ -57,6 +58,7 @@ func Execute() {
 
 func init() {
 	rootCmd.PersistentFlags().StringSliceVarP(&labels, "label", "l", []string{}, "labels to add to the GitHub issue")
+	rootCmd.PersistentFlags().StringVarP(&customTitle, "title", "t", "", "custom title for the GitHub issue")
 }
 
 func fetchNameAndDescription(url string) (string, string, error) {
@@ -65,7 +67,6 @@ func fetchNameAndDescription(url string) (string, string, error) {
 		return "", "", err
 	}
 	return s.Preview.Title, s.Preview.Description, nil
-
 }
 
 func createIssue(url, title, description string) error {
@@ -73,7 +74,9 @@ func createIssue(url, title, description string) error {
 	if err != nil {
 		return err
 	}
-
+	if customTitle != "" {
+		title = customTitle
+	}
 	body := fmt.Sprintf("%s\n\nSource: %s\n", description, url)
 	args := []string{"gh", "issue", "create", "--repo", repo, "--title", title, "--body", body}
 	for _, label := range labels {
